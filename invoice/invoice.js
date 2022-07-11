@@ -55,35 +55,23 @@ $(document).ready(() => {
     if (invoiceDate.length == 0) {
       dateString = formatDate(new Date());
     } else {
-      // make sure event date string has two slashes
-      const dateParts = invoiceDate.split("/");
       let isValidDate = true;
-      if (dateParts.length != 3) {
-        isValidDate = false;
-      }
 
-      // make sure event date string has a 4-digit year
-      const year = invoiceDate.substring(invoiceDate.length - 4);
-      if (isNaN(year)) {
-        isValidDate = false;
-      }
-
-      // convert event date string to Date object
-      // and check for validity
-      let date = new Date(invoiceDate);
-      if (date == "Invalid Date") {
+      const datePattern = /^[01]?\d\/[0-3]\d\/\d{4}$/;
+      // this will match dates like 19/21/2020 and 9/39/2021
+      if (!datePattern.test(invoiceDate)) {
         isValidDate = false;
       }
 
       if (isValidDate) {
         $("#invoice_date").next().text("");
-        $("#invoice_date").val(invoiceDate);
+        $("#invoice_date").val(formatDate(new Date(invoiceDate)));
         dateString = invoiceDate;
       } else {
         $("#invoice_date")
           .next()
           .text("Please enter the date in MM/DD/YYYY format.");
-        $("#invoice_date").val("");
+        $("#clear").click();
         $("#invoice_date").focus();
         return;
       }
